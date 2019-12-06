@@ -1,0 +1,41 @@
+player struct:
+name
+score
+AI?
+marked for win
+turn struct:
+player
+dice
+number of remaining dice
+score
+
+
+loop function:
+arguments players
+construct turns
+check for win
+
+execute_turn function:
+arguments turn
+roll dice
+take dice out of play, gain points
+roll other dice
+discard roll once one dice is out
+bank if turn score high enough
+
+check_roll function
+arguments turn
+returns whether to continue or farkle
+runs all check_roll callbacks
+applies one
+-fixes dice with renumber_dice function
+
+
+check_roll callback:
+arguments turn
+returns array of dice indexes to be excluded from play
+
+renumber_dice function:
+arguments turn
+returns nothing
+loops through the dice array in order to get rid of 0 values
