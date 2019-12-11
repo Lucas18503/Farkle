@@ -1,5 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
+#define DICE_SLOTS 6
+#define DEBUG 1
 void flush_buffer()
 {
 	while((getchar())!='\n');
@@ -21,7 +23,7 @@ char winmark;
 struct turn
 {
 struct player player;
-	char dice[6];
+	char dice[DICE_SLOTS];
 	char num_remaining_dice;
 	int score;
 	
@@ -30,6 +32,8 @@ char execute_turn(struct turn trn)
 {
 	//Construct menu.
 	printf("C: check remaining dice.\n");
+	if(DEBUG)
+		printf("!: instant turn end.\n");
 	//Check for input.
 	printf("Enter the letter or number of your selection.\n");
 	char selection;
@@ -39,6 +43,8 @@ char execute_turn(struct turn trn)
 	{
 		return 1;
 	}
+	else if(selection == '!' && DEBUG)
+		return 0;
 	else
 	{
 		printf("Invalid input.\n");
@@ -54,7 +60,7 @@ void loop(struct player players[], int num_players)
 		struct turn trn;
 		trn.player=curr_player	;
 		trn.score=0;
-		for(int i=0; i<6; i++)
+		for(int i=0; i<DICE_SLOTS; i++)
 			trn.dice[i]=0;
 		trn.num_remaining_dice=0;
 		for(;;)
