@@ -28,7 +28,7 @@ struct player player;
 	int score;
 	
 };
-char execute_turn(struct turn trn)
+char execute_turn(struct turn *trn)
 {
 	//Construct menu.
 	printf("C: check remaining dice.\n");
@@ -65,7 +65,7 @@ void loop(struct player players[], int num_players)
 		trn.num_remaining_dice=0;
 		for(;;)
 		{
-			char cont=execute_turn(trn);
+			char cont=execute_turn(&trn);
 			if(!cont)
 				break;
 		}
