@@ -28,6 +28,13 @@ struct player player;
 	int score;
 	
 };
+void reroll_dice(struct turn *trn)
+{
+	for(int i=0; i<trn->num_remaining_dice; i++)
+	{
+		trn->dice[i]=roll_die();
+	}
+}
 char execute_turn(struct turn *trn)
 {
 	//Construct menu.
