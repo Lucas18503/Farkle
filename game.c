@@ -30,14 +30,27 @@ struct player player;
 };
 void reroll_dice(struct turn *trn)
 {
+	if(trn->num_remaining_dice == 0)
+		trn->num_remaining_dice=6;
 	for(int i=0; i<trn->num_remaining_dice; i++)
 	{
 		trn->dice[i]=roll_die();
 	}
 }
+void print_dice_array(char dice[], int num_dice)
+{
+	for(int i=0; i<num_dice; i++)
+		printf("%d  ",dice[i]);
+}
+void print_dice(struct turn *trn)
+{
+	print_dice_array(trn->dice,trn->num_remaining_dice);
+}
 char execute_turn(struct turn *trn)
 {
 	//Construct menu.
+	if(DEBUG)
+		printf("@: debug roll dice.\n");
 	printf("C: check remaining dice.\n");
 	if(DEBUG)
 		printf("!: instant turn end.\n");
@@ -46,8 +59,13 @@ char execute_turn(struct turn *trn)
 	char selection;
 	scanf("%c",&selection);
 	flush_buffer();
-	if(selection == 'c')
+	if(selection == '@' && DEBUG)
 	{
+		reroll_dice(trn);
+	}
+	else if(selection == 'c')
+	{
+	print_dice(trn);
 		return 1;
 	}
 	else if(selection == '!' && DEBUG)
