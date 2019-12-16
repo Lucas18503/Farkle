@@ -3,12 +3,17 @@ name
 score
 AI?
 marked for win
+
 turn struct:
 player
 dice
 number of remaining dice
 score
 
+action struct:
+name (4 six's, two tripplets)
+list of dice indexes
+point value
 
 loop function:
 arguments players
@@ -18,22 +23,29 @@ check for win
 execute_turn function:
 arguments turn
 roll dice
-take dice out of play, gain points
-roll other dice
+run check_roll
+farkle if no actions right after roll.
+present menu of actions
+show menu of other choices
 discard roll once one dice is out
 bank if turn score high enough
 
 check_roll function
 arguments turn
-returns whether to continue or farkle
+returns whether there are any valid actions
 runs all check_roll callbacks
-applies one
+stores all viable actions, to pointer as second argument?
+
+apply_action function
+arguments turn, action
+-takes dice out of play
+-adds points to turn
 -fixes dice with renumber_dice function
 
 
 check_roll callback:
 arguments turn
-returns array of dice indexes to be excluded from play
+returns action struct, or NULL
 
 renumber_dice function:
 arguments turn
