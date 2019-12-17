@@ -2,6 +2,9 @@
 #include<stdlib.h>
 #define DICE_SLOTS 6
 #define DEBUG 1
+
+#define true 1
+#define false 0
 void flush_buffer()
 {
 	while((getchar())!='\n');
@@ -66,14 +69,14 @@ char execute_turn(struct turn *trn)
 	else if(selection == 'c')
 	{
 	print_dice(trn);
-		return 1;
+		return true;
 	}
 	else if(selection == '!' && DEBUG)
-		return 0;
+		return false;
 	else
 	{
 		printf("Invalid input.\n");
-		return 1;
+		return true;
 	}
 }
 void loop(struct player players[], int num_players)
