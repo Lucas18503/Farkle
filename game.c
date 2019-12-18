@@ -31,6 +31,13 @@ struct player player;
 	int score;
 	
 };
+struct action
+{
+	char *name;
+	char dice[DICE_SLOTS];
+	char num_dice;
+	int points;
+};
 void reroll_dice(struct turn *trn)
 {
 	if(trn->num_remaining_dice == 0)
