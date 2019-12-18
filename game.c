@@ -49,11 +49,18 @@ void print_dice(struct turn *trn)
 {
 	print_dice_array(trn->dice,trn->num_remaining_dice);
 }
+char action_can_roll_dice(struct turn *trn)
+{
+	if(trn->num_remaining_dice == DICE_SLOTS)
+		return false;
+		return true;
+}
 char execute_turn(struct turn *trn)
 {
 	//Construct menu.
-	if(DEBUG)
-		printf("@: debug roll dice.\n");
+	char can_roll=action_can_roll_dice(trn);
+	if(can_roll)
+		printf("r: roll dice.\n");
 	printf("C: check remaining dice.\n");
 	if(DEBUG)
 		printf("!: instant turn end.\n");
@@ -62,7 +69,7 @@ char execute_turn(struct turn *trn)
 	char selection;
 	scanf("%c",&selection);
 	flush_buffer();
-	if(selection == '@' && DEBUG)
+	if(selection == 'r' && can_roll)
 	{
 		reroll_dice(trn);
 	}
