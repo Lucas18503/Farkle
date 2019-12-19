@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<time.h>
 #define DICE_SLOTS 6
 #define DEBUG 1
 
@@ -116,6 +117,7 @@ void loop(struct player players[], int num_players)
 }
 int main()
 {
+	srand(time(0));
 	//create some temp players.
 	struct player p1;
 	p1.name="Bob";
