@@ -25,7 +25,7 @@ char winmark;
 };
 struct turn
 {
-struct player player;
+struct player *player;
 	char dice[DICE_SLOTS];
 	char num_remaining_dice;
 	int score;
@@ -97,10 +97,10 @@ void loop(struct player players[], int num_players)
 {
 	for(int i=0; i<num_players; i++)
 	{
-		struct player curr_player=players[i];
-		printf("It is %s's turn.\n",curr_player.name);
+		struct player *curr_player=&players[i];
+		printf("It is %s's turn.\n",curr_player->name);
 		struct turn trn;
-		trn.player=curr_player	;
+		trn.player=curr_player;
 		trn.score=0;
 		for(int i=0; i<DICE_SLOTS; i++)
 			trn.dice[i]=0;
