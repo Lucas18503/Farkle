@@ -6,6 +6,7 @@
 
 #define true 1
 #define false 0
+
 void flush_buffer()
 {
 	while((getchar())!='\n');
@@ -39,6 +40,26 @@ struct action
 	char num_dice;
 	int points;
 };
+int cb_1(struct turn *trn, struct action *act)
+{
+	int where=0;
+	for(int i=0; i<trn->num_remaining_dice; i++)
+	{
+		if(trn->dice[i]==1)
+		{
+			where=i;
+			break;
+		}
+	}
+	if(!where)
+		return 0;
+	act->name="One";
+	act->num_dice=1;
+	act->points=100;
+	act->dice[0]=where;
+	return 1;
+}
+int (*roll_callbacks[])(struct turn*, struct action*) = {*cb_1};
 void reroll_dice(struct turn *trn)
 {
 	if(trn->num_remaining_dice == 0)
@@ -63,6 +84,7 @@ char action_can_roll_dice(struct turn *trn)
 		return false;
 		return true;
 }
+
 char execute_turn(struct turn *trn)
 {
 	//Construct menu.
