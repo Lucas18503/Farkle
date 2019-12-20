@@ -32,7 +32,7 @@ struct player *player;
 	char dice[DICE_SLOTS];
 	char num_remaining_dice;
 	int score;
-	
+	char just_rolled;
 };
 struct action
 {
@@ -122,7 +122,7 @@ void print_dice(struct turn *trn)
 }
 char action_can_roll_dice(struct turn *trn)
 {
-	if(trn->num_remaining_dice == DICE_SLOTS)
+	if(trn->just_rolled)
 		return false;
 		return true;
 }
@@ -133,6 +133,11 @@ char execute_turn(struct turn *trn)
 	printf("\n");
 	struct action actions[num_roll_callbacks];
 	int num_actions = check_roll(trn,actions);
+	if(!num_actions && trn->just_rolled)
+	{
+		printf("%s farkled with %d points.\n",trn->player->name,trn->score);
+		return false;
+	}
 	for(int i=0; i<num_actions; i++)
 	{
 		printf("%d: %s for %d points\n",i+1,actions[i].name,actions[i].points);
@@ -152,7 +157,10 @@ char execute_turn(struct turn *trn)
 	{
 		int ind = selection - '0';
 		if(ind <= num_actions)
+		{
 			apply_action(trn,&actions[(ind-1)]);
+			trn->just_rolled=false;
+		}
 		else
 			printf("Invalid input\n");
 		return 1;
@@ -160,6 +168,8 @@ char execute_turn(struct turn *trn)
 	else if(selection == 'r' && can_roll)
 	{
 		reroll_dice(trn);
+		print_dice(trn);
+		trn->just_rolled=true;
 	}
 	else if(selection == 'c')
 	{
@@ -186,6 +196,7 @@ void loop(struct player players[], int num_players)
 		for(int i=0; i<DICE_SLOTS; i++)
 			trn.dice[i]=0;
 		trn.num_remaining_dice=0;
+		trn.just_rolled=false;
 		for(;;)
 		{
 			char cont=execute_turn(&trn);
