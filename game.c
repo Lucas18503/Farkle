@@ -41,17 +41,34 @@ struct action
 	char num_dice;
 	int points;
 };
+struct dice_group
+{
+	int value; // The number all the dice in this group share in common.
+	char dice_positions[DICE_SLOTS]; // The list of positions in the turn's dice array.
+	int length; // The length of the dice_position array.
+	
+};
+struct dice_group find_dice_by_value(int value, struct turn *trn)
+{
+	struct dice_group ret;
+	ret.value=value;
+	ret.length=0;
+	for(int i=0; i<trn->num_remaining_dice; i++)
+	{
+		if(trn->dice[i]==value)
+		{
+			ret.dice_positions[ret.length]=i;
+			ret.length++;
+		}
+	}
+	return ret;
+}
 int cb_1(struct turn *trn, struct action *act)
 {
 	int where=0;
-	for(int i=0; i<trn->num_remaining_dice; i++)
-	{
-		if(trn->dice[i]==1)
-		{
-			where=i;
-			break;
-		}
-	}
+	struct dice_group dg=find_dice_by_value(1,trn);
+	if(dg.length)
+		where=dg.dice_positions[0];
 	if(!where)
 		return false;
 	act->name="One";
