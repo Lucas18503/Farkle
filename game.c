@@ -8,6 +8,11 @@
 #define true 1
 #define false 0
 
+int point_multiplier(int x)
+{
+	if(x == 1) return 100;
+	return x*10;
+}
 void flush_buffer()
 {
 	while((getchar())!='\n');
@@ -63,28 +68,37 @@ struct dice_group find_dice_by_value(int value, struct turn *trn)
 	}
 	return ret;
 }
-int cb_1(struct turn *trn, struct action *act)
+int check_for_single(struct turn *trn, struct action *act, int value)
 {
 	int where=-1;
-	struct dice_group dg=find_dice_by_value(1,trn);
+	struct dice_group dg=find_dice_by_value(value,trn);
 	if(dg.length)
 		where=dg.dice_positions[0];
 	if(where<0)
 		return false;
-	act->name="One";
+	act->name="Thing";
 	act->num_dice=1;
-	act->points=100;
+	act->points = point_multiplier(value);
 	act->dice[0]=where;
 	return true;
 }
-int (*roll_callbacks[])(struct turn*, struct action*) = {&cb_1};
-int num_roll_callbacks=1; //Make sure to change this if adding new ones! This seems like a really dumb bug-causing thing that could really easily happen.
+int cb_1(struct turn *trn, struct action *act)
+{
+	return check_for_single(trn,act,1);
+}
+int cb_5(struct turn *trn, struct action *act)
+{
+	return check_for_single(trn,act,5);
+}
+
+int (*roll_callbacks[])(struct turn*, struct action*) = {&cb_1,&cb_5};
+int num_roll_callbacks = 2; //Make sure to change this if adding new ones! This seems like a really dumb bug-causing thing that could really easily happen.
 int check_roll(struct turn *trn, struct action actions[])
 {
 	int ret=0;
 	for(int i=0; i<num_roll_callbacks; i++)
 	{
-		struct action *act=&actions[i];
+		struct action *act=&actions[ret];
 		if((*roll_callbacks[i])(trn,act))
 		{
 			ret++;
@@ -159,6 +173,7 @@ char execute_turn(struct turn *trn)
 		if(ind <= num_actions)
 		{
 			apply_action(trn,&actions[(ind-1)]);
+			printf("Applied %d",ind);
 			trn->just_rolled=false;
 		}
 		else
@@ -210,10 +225,9 @@ int main()
 {
 	srand(time(0));
 	//create some temp players.
-	struct player p1;
-	p1.name="Bob";
-	struct player p2;
-	p2.name="Joe";
+	struct player p1={"bob",0,0};
+	struct player p2={"joe",0,0};
+
 	struct player plrs[]={p1,p2};
 	loop(plrs, 2);
 	
