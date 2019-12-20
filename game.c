@@ -52,14 +52,28 @@ int cb_1(struct turn *trn, struct action *act)
 		}
 	}
 	if(!where)
-		return 0;
+		return false;
 	act->name="One";
 	act->num_dice=1;
 	act->points=100;
 	act->dice[0]=where;
-	return 1;
+	return true;
 }
-int (*roll_callbacks[])(struct turn*, struct action*) = {*cb_1};
+int (*roll_callbacks[])(struct turn*, struct action*) = {&cb_1};
+int num_roll_callbacks=1; //Make sure to change this if adding new ones! This seems like a really dumb bug-causing thing that could really easily happen.
+int check_roll(struct turn *trn, struct action actions[])
+{
+	int ret=0;
+	for(int i=0; i<num_roll_callbacks; i++)
+	{
+		struct action *act=&actions[i];
+		if((*roll_callbacks[i])(trn,act))
+		{
+			ret++;
+		}
+	}
+	return ret;
+}
 void reroll_dice(struct turn *trn)
 {
 	if(trn->num_remaining_dice == 0)
@@ -88,6 +102,12 @@ char action_can_roll_dice(struct turn *trn)
 char execute_turn(struct turn *trn)
 {
 	//Construct menu.
+	struct action actions[num_roll_callbacks];
+	int num_actions = check_roll(trn,actions);
+	for(int i=0; i<num_actions; i++)
+	{
+		printf("%d: %s for %d points\n",i+1,actions[i].name,actions[i].points);
+	}
 	char can_roll=action_can_roll_dice(trn);
 	if(can_roll)
 		printf("r: roll dice.\n");
