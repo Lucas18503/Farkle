@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<ctype.h>
 #include<time.h>
 #define DICE_SLOTS 6
 #define DEBUG 1
@@ -74,6 +75,16 @@ int check_roll(struct turn *trn, struct action actions[])
 	}
 	return ret;
 }
+void apply_action(struct turn *trn, struct action *act)
+{
+	for(int i=0; i<act->num_dice; i++)
+	{
+		trn->dice[act->dice[i]]=trn->dice[(trn->num_remaining_dice-1)];
+		trn->num_remaining_dice--;
+	}
+	trn->score+=act->points;
+	return;
+}
 void reroll_dice(struct turn *trn)
 {
 	if(trn->num_remaining_dice == 0)
@@ -102,6 +113,7 @@ char action_can_roll_dice(struct turn *trn)
 char execute_turn(struct turn *trn)
 {
 	//Construct menu.
+	printf("\n");
 	struct action actions[num_roll_callbacks];
 	int num_actions = check_roll(trn,actions);
 	for(int i=0; i<num_actions; i++)
@@ -119,7 +131,16 @@ char execute_turn(struct turn *trn)
 	char selection;
 	scanf("%c",&selection);
 	flush_buffer();
-	if(selection == 'r' && can_roll)
+	if(isdigit(selection))
+	{
+		int ind = selection - '0';
+		if(ind <= num_actions)
+			apply_action(trn,&actions[(ind-1)]);
+		else
+			printf("Invalid input\n");
+		return 1;
+	}
+	else if(selection == 'r' && can_roll)
 	{
 		reroll_dice(trn);
 	}
