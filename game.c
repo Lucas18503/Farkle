@@ -65,11 +65,11 @@ struct dice_group find_dice_by_value(int value, struct turn *trn)
 }
 int cb_1(struct turn *trn, struct action *act)
 {
-	int where=0;
+	int where=-1;
 	struct dice_group dg=find_dice_by_value(1,trn);
 	if(dg.length)
 		where=dg.dice_positions[0];
-	if(!where)
+	if(where<0)
 		return false;
 	act->name="One";
 	act->num_dice=1;
