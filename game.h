@@ -21,5 +21,6 @@ struct dice_group
 };
 struct turn;
 struct dice_group find_dice_by_value(int value, struct turn *trn);
+struct dice_group *group_all_dice(struct turn *trn);
 void loop(struct player players[], int num_players);
 #endif

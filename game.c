@@ -20,6 +20,16 @@ struct dice_group find_dice_by_value(int value, struct turn *trn)
 	}
 	return ret;
 }
+struct dice_group *group_all_dice(struct turn *trn)
+{
+	static struct dice_group ret[DICE_SLOTS];
+	for(int i=0; i<DICE_SLOTS; i++)
+	{
+ret[i]=find_dice_by_value(i+1,trn);
+	}
+	return ret;
+}
+
 void loop(struct player players[], int num_players)
 {
 	for(int i=0; i<num_players; i++)
