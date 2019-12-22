@@ -56,7 +56,6 @@ char execute_turn(struct turn *trn)
 		if(ind <= num_actions)
 		{
 			apply_action(trn,&actions[(ind-1)]);
-			printf("Applied %d",ind);
 			trn->just_rolled=false;
 		}
 		else
