@@ -7,7 +7,7 @@
 void reroll_dice(struct turn *trn)
 {
 	if(trn->num_remaining_dice == 0)
-		trn->num_remaining_dice=6;
+		trn->num_remaining_dice=DICE_SLOTS;
 	for(int i=0; i<trn->num_remaining_dice; i++)
 	{
 		trn->dice[i]=roll_die();

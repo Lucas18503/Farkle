@@ -3,6 +3,7 @@
 #include "game.h"
 struct turn
 {
+	struct game *game;
 struct player *player;
 	char dice[DICE_SLOTS];
 	char num_remaining_dice;

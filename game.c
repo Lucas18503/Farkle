@@ -2,6 +2,8 @@
 #include<stdlib.h>
 #include<ctype.h>
 #include<time.h>
+#include<string.h>
+#include "utils.h"
 #include "game.h"
 #include "turn.h"
 
@@ -30,13 +32,80 @@ ret[i]=find_dice_by_value(i+1,trn);
 	return ret;
 }
 
-void loop(struct player players[], int num_players)
+int run_configure_game(struct game *game)
 {
-	for(int i=0; i<num_players; i++)
+	printf("Player names:\n");
+	for(int i=0; i<game->num_players; i++)
 	{
-		struct player *curr_player=&players[i];
+		printf("%d: %s\n",(i+1),game->players[i].name);
+	}
+	printf("+/-: Increese/decreese number of players\n");
+	printf("W: Edit winning score (currently %d)\n",game->winning_score);
+	printf("B: Edit initial bank score (currently %d)\n",game->bank_score);
+	printf("D: done");
+	printf("Enter the letter or number of your selection.\n");
+	char selection;
+	scanf("%c",&selection);
+	flush_buffer();
+	if(isdigit(selection))
+	{
+		int ind = selection - '0';
+		if(ind <= game->num_players)
+		{
+		printf("Enter %s's new name.",game->players[(ind-1)].name);
+		scanf("%s",game->players[(ind-1)].name);
+		flush_buffer();
+		}
+		else
+			printf("Invalid input\n");
+		return true;
+	}
+	else if(selection == '+')
+	{
+		if(game->num_players < MAX_PLAYERS)
+		{
+			strcpy(game->players[game->num_players].name,"Player");
+			game->num_players++;
+		}
+		else
+			printf("There can only be %d players in this game.",MAX_PLAYERS);
+	}
+	else if(selection == '-')
+	{
+		if(game->num_players > 2)
+		{
+			game->num_players--;
+		}
+		else
+			printf("There can only be a minimum of 2 players in this game.");
+	}
+	else if(selection == 'd')
+	{
+		return false;
+	}
+	else
+	{
+		printf("Invalid input\n");
+		return true;
+	}
+}
+void configure_game(struct game *game)
+{
+	for(;;)
+	{
+		char res=run_configure_game(game);
+		if(!res)
+			break;
+	}
+}
+void loop(struct game *game)
+{
+	for(int i=0; i<game->num_players; i++)
+	{
+		struct player *curr_player=&game->players[i];
 		printf("It is %s's turn.\n",curr_player->name);
 		struct turn trn;
+		trn.game=game;
 		trn.player=curr_player;
 		trn.score=0;
 		for(int i=0; i<DICE_SLOTS; i++)
@@ -55,14 +124,15 @@ void loop(struct player players[], int num_players)
 int main()
 {
 	srand(time(0));
-	//roll_callbacks = {&cb_1,&cb_5};
-	//num_roll_callbacks=2;  //Make sure to change this if adding new ones! This seems like a really dumb bug-causing thing that could really easily happen.
-	//create some temp players.
-	struct player p1={"bob",0,0};
-	struct player p2={"joe",0,0};
+	//create a game.
+	struct game game;
+	game.num_players=2;
+	strcpy(game.players[0].name, "Player");
+	strcpy(game.players[1].name, "Player");
 
-	struct player plrs[]={p1,p2};
-	loop(plrs, 2);
+	configure_game(&game);
+
+	loop(&game);
 	
 	return 0;
 }
