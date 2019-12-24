@@ -33,5 +33,6 @@ struct dice_group find_dice_by_value(int value, struct turn *trn);
 struct dice_group *group_all_dice(struct turn *trn);
 int run_configure_game(struct game *game);
 void configure_game(struct game *game);
-void loop(struct game *game);
+void turn_loop(struct game *game);
+void game_loop(struct game *game);
 #endif

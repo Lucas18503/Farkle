@@ -4,7 +4,7 @@
 
 struct action
 {
-	char *name;
+	char name[500];
 	char dice[DICE_SLOTS];
 	char num_dice;
 	int points;

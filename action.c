@@ -1,4 +1,6 @@
 #include<stdio.h>
+#include<string.h>
+#include "bl_number_to_words.h"
 #include "action.h"
 #include "turn.h"
 #include "utils.h"
@@ -10,7 +12,10 @@ int check_for_single(struct turn *trn, struct action *act, int value)
 		where=dg.dice_positions[0];
 	if(where<0)
 		return false;
-	act->name="Thing";
+	char name[500];
+	bl_number_to_words(value,name,500);
+	strcpy(act->name, name);
+
 	act->num_dice=1;
 	act->points = point_multiplier(value);
 	act->dice[0]=where;
@@ -38,8 +43,10 @@ int cb_multi(struct turn *trn, struct action *act)
 	}
 	if(group<0)
 		return false;
-
-	act->name="Thing";
+	char first[500], second[500];
+	bl_number_to_words(groups[group].length,first,500);
+	bl_number_to_words(groups[group].value,second,500);
+sprintf(act->name,"%s %ss",first,second);
 	for(int i=0; i<groups[group].length; i++) act->dice[i] = groups[group].dice_positions[i];
 	act->num_dice=groups[group].length;
 	int points=point_multiplier(groups[group].value)*10;

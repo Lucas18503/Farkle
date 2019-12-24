@@ -3,6 +3,8 @@
 #include<ctype.h>
 #include<time.h>
 #include<string.h>
+#define BL_NUMWORDS_IMPLEMENTATION
+#include "bl_number_to_words.h"
 #include "utils.h"
 #include "game.h"
 #include "turn.h"
@@ -64,7 +66,7 @@ int run_configure_game(struct game *game)
 	{
 		if(game->num_players < MAX_PLAYERS)
 		{
-			strcpy(game->players[game->num_players].name,"Player");
+			sprintf(game->players[game->num_players].name,"Player %d", (game->num_players+1));
 			game->num_players++;
 		}
 		else
@@ -98,7 +100,7 @@ void configure_game(struct game *game)
 			break;
 	}
 }
-void loop(struct game *game)
+void turn_loop(struct game *game)
 {
 	for(int i=0; i<game->num_players; i++)
 	{
@@ -121,18 +123,23 @@ void loop(struct game *game)
 		
 	}
 }
+void game_loop(struct game *game)
+{
+	for(;;)
+	{
+		turn_loop(game);
+	}
+}
 int main()
 {
 	srand(time(0));
 	//create a game.
 	struct game game;
 	game.num_players=2;
-	strcpy(game.players[0].name, "Player");
-	strcpy(game.players[1].name, "Player");
-
+	strcpy(game.players[0].name, "Player 1");
+	strcpy(game.players[1].name, "Player 2");
 	configure_game(&game);
-
-	loop(&game);
+	game_loop(&game);
 	
 	return 0;
 }
