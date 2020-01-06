@@ -54,8 +54,52 @@ sprintf(act->name,"%s %ss",first,second);
 	act->points=points;
 	return true;
 }
-int (*roll_callbacks[])(struct turn*, struct action*) = {&cb_multi,&cb_1,&cb_5};
-int num_roll_callbacks = 3;
+int check_for_similar_groups(struct turn *trn, struct action *act, int required_length, int required_num_groups)
+{
+	struct dice_group *groups = group_all_dice(trn);
+	int group_indexes[6];
+	int num_groups=0;
+	for(int i=0; i<DICE_SLOTS; i++)
+	{
+		if(groups[i].length==required_length)
+		{
+			group_indexes[num_groups]=i;
+		num_groups++;
+		}
+	}
+	if(num_groups!=required_num_groups)
+		return false;
+	act->num_dice=0;
+	for(int i=0; i<num_groups; i++)
+	{
+		struct dice_group *curr_group=&groups[group_indexes[i]];
+		for(int j=0; j<curr_group->length; j++)
+		{
+			act->dice[act->num_dice]=curr_group->dice_positions[j];
+			act->num_dice++;
+		}
+	}
+	return true;
+}
+int cb_three_pair(struct turn *trn, struct action *act)
+{
+	int res=check_for_similar_groups(trn,act,2,3);
+	if(res==false) return false;
+	act->points=1500;
+	strcpy(act->name,"Three pair");
+return true;
+}
+int cb_two_triplets(struct turn *trn, struct action *act)
+{
+	int res=check_for_similar_groups(trn,act,3,2);
+	if(res==false) return false;
+	act->points=2500;
+	strcpy(act->name,"Two triplets");
+return true;
+}
+
+int (*roll_callbacks[])(struct turn*, struct action*) = {&cb_three_pair,&cb_two_triplets,&cb_multi,&cb_1,&cb_5};
+int num_roll_callbacks = 5;
 
 int check_roll(struct turn *trn, struct action actions[])
 {

@@ -13,6 +13,9 @@ int check_for_single(struct turn *trn, struct action *act, int value);
 int cb_1(struct turn *trn, struct action *act);
 int cb_5(struct turn *trn, struct action *act);
 int cb_multi(struct turn *trn, struct action *act);
+int check_for_similar_groups(struct turn *trn, struct action *act, int required_length, int required_num_groups);
+int cb_three_pair(struct turn *trn, struct action *act);
+int cb_two_triplets(struct turn *trn, struct action *act);
 
 extern int (*roll_callbacks[])(struct turn*, struct action*);
 extern int num_roll_callbacks;
