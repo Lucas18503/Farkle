@@ -23,6 +23,84 @@ char action_can_roll_dice(struct turn *trn)
 		return false;
 		return true;
 }
+int run_configure_dice(struct turn *trn)
+{
+	printf("Dice:\n");
+	for(int i=0; i<trn->num_remaining_dice; i++)
+	{
+		printf("%d: %d\n",(i+1),trn->dice[i]);
+	}
+	printf("+/-: Increese/decreese number of dice\n");
+	printf("R: reset to maximum number of dice \n");
+	printf("D: done");
+	printf("Enter the letter or number of your selection.\n");
+	char selection;
+	scanf("%c",&selection);
+	flush_buffer();
+	if(isdigit(selection))
+	{
+		int ind = selection - '0';
+		if(ind <= trn->num_remaining_dice)
+		{
+		printf("Enter the new dice value.\n");
+		int value;
+		scanf("%i",&value);
+		if(value >= 1 && value <= 6)
+		{
+			trn->dice[(ind-1)]=value;
+			flush_buffer();
+		}
+		else
+		{
+			printf("Invalid input\n");
+		}
+		}
+		else
+			printf("Invalid input\n");
+		return true;
+	}
+	else if(selection == '+')
+	{
+		if(trn->num_remaining_dice < DICE_SLOTS)
+		{
+			trn->num_remaining_dice++;
+		}
+		else
+			printf("There can only be %d dice.",DICE_SLOTS);
+	}
+	else if(selection == '-')
+	{
+		if(trn->num_remaining_dice > 0)
+		{
+			trn->num_remaining_dice--;
+		}
+		else
+			printf("There can be no fewer dice.\n");
+	}
+	else if(selection == 'r')
+	{
+		trn->num_remaining_dice=DICE_SLOTS;
+		return true;
+	}
+	else if(selection == 'd')
+	{
+		return false;
+	}
+	else
+	{
+		printf("Invalid input\n");
+		return true;
+	}
+}
+void configure_dice(struct turn *trn)
+{
+	for(;;)
+	{
+		char res=run_configure_dice(trn);
+		if(!res)
+			break;
+	}
+}
 
 char execute_turn(struct turn *trn)
 {
@@ -44,7 +122,11 @@ char execute_turn(struct turn *trn)
 		printf("r: roll dice.\n");
 	printf("C: check remaining dice.\n");
 	if(DEBUG)
+	{
+		printf("Debug:\n");
 		printf("!: instant turn end.\n");
+		printf("@: Modify dice.\n");
+	}
 	//Check for input.
 	printf("Enter the letter or number of your selection.\n");
 	char selection;
@@ -75,6 +157,10 @@ char execute_turn(struct turn *trn)
 	}
 	else if(selection == '!' && DEBUG)
 		return false;
+	else if(selection == '@' && DEBUG)
+	{
+		configure_dice(trn);
+	}
 	else
 	{
 		printf("Invalid input.\n");
