@@ -2,7 +2,7 @@
 #include<ctype.h>
 #include "game.h"
 #include "turn.h"
-#include "action.h"
+#include "combination.h"
 #include "utils.h"
 void reroll_dice(struct turn *trn)
 {
@@ -106,16 +106,16 @@ char execute_turn(struct turn *trn)
 {
 	//Construct menu.
 	printf("\n");
-	struct action actions[num_roll_callbacks];
-	int num_actions = check_roll(trn,actions);
-	if(!num_actions && trn->just_rolled)
+	struct combination combinations[num_roll_callbacks];
+	int num_combinations = check_roll(trn,combinations);
+	if(!num_combinations && trn->just_rolled)
 	{
 		printf("%s farkled with %d points.\n",trn->player->name,trn->score);
 		return false;
 	}
-	for(int i=0; i<num_actions; i++)
+	for(int i=0; i<num_combinations; i++)
 	{
-		printf("%d: %s for %d points\n",i+1,actions[i].name,actions[i].points);
+		printf("%d: %s for %d points\n",i+1,combinations[i].name,combinations[i].points);
 	}
 	char can_roll=action_can_roll_dice(trn);
 	if(can_roll)
@@ -135,9 +135,9 @@ char execute_turn(struct turn *trn)
 	if(isdigit(selection))
 	{
 		int ind = selection - '0';
-		if(ind <= num_actions)
+		if(ind <= num_combinations)
 		{
-			apply_action(trn,&actions[(ind-1)]);
+			apply_combination(trn,&combinations[(ind-1)]);
 			trn->just_rolled=false;
 		}
 		else
