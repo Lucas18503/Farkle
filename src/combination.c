@@ -57,7 +57,7 @@ sprintf(cb->name,"%s %ss",first,second);
 int check_for_similar_groups(struct turn *trn, struct combination *cb, int required_length, int required_num_groups)
 {
 	struct dice_group *groups = group_all_dice(trn);
-	int group_indexes[6];
+	int group_indexes[DICE_SLOTS];
 	int num_groups=0;
 	for(int i=0; i<DICE_SLOTS; i++)
 	{
