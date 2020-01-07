@@ -6,7 +6,7 @@ I like Farkle.
 * Combination: A group of dice that can be taken out of play for points. Examples are one, five, three ones, straight, etc.
 * Player: Someone in the game. The struct contains data like the player's name and score, and other misc stuff.
 * Turn: the container for data that only applies to one player while they are playing. When farkling or banking, the turn is no longer needed because a new one will be created when the player plays again.
-Game: Container for the players and other data like minimum bank score, winning score, etc. This will get passed as part of every turn, so all data should be available where it needs to be.
+* Game: Container for the players and other data like minimum bank score, winning score, etc. This will get passed as part of every turn, so all data should be available where it needs to be.
 * Dice group: Different than a combination; a struct that stores positions of all dice that are of the same value.
 * Debug: A flag you can enable in game.h. Should be disabled in release because it provides features to cheat, like a screen to modify your dice roll.
 ## Compilation
