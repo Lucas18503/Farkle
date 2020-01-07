@@ -125,8 +125,9 @@ void turn_loop(struct game *game)
 }
 void game_loop(struct game *game)
 {
-	for(;;)
+	for(int i=1;;i++)
 	{
+		printf("Turn %d\n",i);
 		turn_loop(game);
 	}
 }
@@ -138,6 +139,8 @@ int main()
 	game.num_players=2;
 	strcpy(game.players[0].name, "Player 1");
 	strcpy(game.players[1].name, "Player 2");
+	game.winning_score=10000;
+	game.bank_score=500;
 	configure_game(&game);
 	game_loop(&game);
 	

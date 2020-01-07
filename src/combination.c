@@ -21,6 +21,33 @@ int check_for_single(struct turn *trn, struct combination *cb, int value)
 	cb->dice[0]=where;
 	return true;
 }
+int check_for_similar_groups(struct turn *trn, struct combination *cb, int required_length, int required_num_groups)
+{
+	struct dice_group *groups = group_all_dice(trn);
+	int group_indexes[DICE_SLOTS];
+	int num_groups=0;
+	for(int i=0; i<DICE_SLOTS; i++)
+	{
+		if(groups[i].length==required_length)
+		{
+			group_indexes[num_groups]=i;
+		num_groups++;
+		}
+	}
+	if(num_groups!=required_num_groups)
+		return false;
+	cb->num_dice=0;
+	for(int i=0; i<num_groups; i++)
+	{
+		struct dice_group *curr_group=&groups[group_indexes[i]];
+		for(int j=0; j<curr_group->length; j++)
+		{
+			cb->dice[cb->num_dice]=curr_group->dice_positions[j];
+			cb->num_dice++;
+		}
+	}
+	return true;
+}
 int cb_1(struct turn *trn, struct combination *cb)
 {
 	return check_for_single(trn,cb,1);
@@ -54,33 +81,6 @@ sprintf(cb->name,"%s %ss",first,second);
 	cb->points=points;
 	return true;
 }
-int check_for_similar_groups(struct turn *trn, struct combination *cb, int required_length, int required_num_groups)
-{
-	struct dice_group *groups = group_all_dice(trn);
-	int group_indexes[DICE_SLOTS];
-	int num_groups=0;
-	for(int i=0; i<DICE_SLOTS; i++)
-	{
-		if(groups[i].length==required_length)
-		{
-			group_indexes[num_groups]=i;
-		num_groups++;
-		}
-	}
-	if(num_groups!=required_num_groups)
-		return false;
-	cb->num_dice=0;
-	for(int i=0; i<num_groups; i++)
-	{
-		struct dice_group *curr_group=&groups[group_indexes[i]];
-		for(int j=0; j<curr_group->length; j++)
-		{
-			cb->dice[cb->num_dice]=curr_group->dice_positions[j];
-			cb->num_dice++;
-		}
-	}
-	return true;
-}
 int cb_three_pair(struct turn *trn, struct combination *cb)
 {
 	int res=check_for_similar_groups(trn,cb,2,3);
@@ -97,9 +97,17 @@ int cb_two_triplets(struct turn *trn, struct combination *cb)
 	strcpy(cb->name,"Two triplets");
 return true;
 }
+int cb_straight(struct turn *trn, struct combination *cb)
+{
+	int res=check_for_similar_groups(trn,cb,1,6);
+	if(res==false) return false;
+	cb->points=1500;
+	strcpy(cb->name,"Straight");
+return true;
+}
 
-int (*roll_callbacks[])(struct turn*, struct combination*) = {&cb_three_pair,&cb_two_triplets,&cb_multi,&cb_1,&cb_5};
-int num_roll_callbacks = 5;
+int (*roll_callbacks[])(struct turn*, struct combination*) = {&cb_straight,&cb_three_pair,&cb_two_triplets,&cb_multi,&cb_1,&cb_5};
+int num_roll_callbacks = 6;
 
 int check_roll(struct turn *trn, struct combination combinations[])
 {
