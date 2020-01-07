@@ -4,6 +4,12 @@
 #define DEBUG 1
 #define MAX_PLAYERS 8
 
+#define V_HOT_DICE_ROLL 1
+#define V_THREE_FARKLES 2
+#define V_TOXIC_TWOS 4
+#define V_HIGH_STAKES 8
+#define V_WELLFAIR 16
+
 #define true 1
 #define false 0
 #include "turn.h"
