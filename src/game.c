@@ -33,7 +33,17 @@ ret[i]=find_dice_by_value(i+1,trn);
 	}
 	return ret;
 }
-
+int compare_scores(const void *p1, const void *p2) // These are typecast ot players.
+{
+	return (((struct player *)p2)->score-((struct player *)p1)->score);
+}
+void show_scores(struct game *game)
+{
+	struct player players[game->num_players];
+	for(int i=0; i<game->num_players; i++) players[i]=game->players[i];
+	qsort(players,game->num_players,sizeof(struct player),compare_scores);
+	for(int i=0; i<game->num_players; i++) printf("%s: %d points.\n",players[i].name,players[i].score);
+}
 int run_configure_game(struct game *game)
 {
 	printf("Player names:\n");
@@ -44,7 +54,7 @@ int run_configure_game(struct game *game)
 	printf("+/-: Increese/decreese number of players\n");
 	printf("W: Edit winning score (currently %d)\n",game->winning_score);
 	printf("B: Edit initial bank score (currently %d)\n",game->bank_score);
-	printf("D: done");
+	printf("D: done\n");
 	printf("Enter the letter or number of your selection.\n");
 	char selection;
 	scanf("%c",&selection);
@@ -54,7 +64,7 @@ int run_configure_game(struct game *game)
 		int ind = selection - '0';
 		if(ind <= game->num_players)
 		{
-		printf("Enter %s's new name.",game->players[(ind-1)].name);
+		printf("Enter %s's new name.\n",game->players[(ind-1)].name);
 		scanf("%s",game->players[(ind-1)].name);
 		flush_buffer();
 		}
@@ -70,7 +80,7 @@ int run_configure_game(struct game *game)
 			game->num_players++;
 		}
 		else
-			printf("There can only be %d players in this game.",MAX_PLAYERS);
+			printf("There can only be %d players in this game.\n",MAX_PLAYERS);
 	}
 	else if(selection == '-')
 	{
@@ -79,7 +89,7 @@ int run_configure_game(struct game *game)
 			game->num_players--;
 		}
 		else
-			printf("There can only be a minimum of 2 players in this game.");
+			printf("There can only be a minimum of 2 players in this game.\n");
 	}
 	else if(selection == 'd')
 	{

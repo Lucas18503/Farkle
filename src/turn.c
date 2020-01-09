@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<stdlib.h>
 #include<ctype.h>
 #include "game.h"
 #include "turn.h"
@@ -32,7 +33,7 @@ int run_configure_dice(struct turn *trn)
 	}
 	printf("+/-: Increese/decreese number of dice\n");
 	printf("R: reset to maximum number of dice \n");
-	printf("D: done");
+	printf("D: done\n");
 	printf("Enter the letter or number of your selection.\n");
 	char selection;
 	scanf("%c",&selection);
@@ -66,7 +67,7 @@ int run_configure_dice(struct turn *trn)
 			trn->num_remaining_dice++;
 		}
 		else
-			printf("There can only be %d dice.",DICE_SLOTS);
+			printf("There can only be %d dice.\n",DICE_SLOTS);
 	}
 	else if(selection == '-')
 	{
@@ -104,13 +105,25 @@ void configure_dice(struct turn *trn)
 
 char execute_turn(struct turn *trn)
 {
-	//Construct menu.
+	system("cls");
+	printf("It is %s's turn.\n",trn->player->name);
+	if(trn->score>0)
+		printf("Points saved: %d\n",trn->score);
+	if(trn->num_remaining_dice>0)
+	{
+		printf("Remaining dice (%d): ",trn->num_remaining_dice);
+		print_dice(trn);
+		printf("\n");
+	}
+	for(int i=0; i<80; i++) printf("-");
 	printf("\n");
+	//Construct menu.
 	struct combination combinations[num_roll_callbacks];
 	int num_combinations = check_roll(trn,combinations);
 	if(!num_combinations && trn->just_rolled)
 	{
 		printf("%s farkled with %d points.\n",trn->player->name,trn->score);
+		pause();
 		return false;
 	}
 	for(int i=0; i<num_combinations; i++)
@@ -120,7 +133,7 @@ char execute_turn(struct turn *trn)
 	char can_roll=action_can_roll_dice(trn);
 	if(can_roll)
 		printf("r: roll dice.\n");
-	printf("C: check remaining dice.\n");
+	printf("S: check all player scores\n");
 	if(DEBUG)
 	{
 		printf("Debug:\n");
@@ -142,17 +155,18 @@ char execute_turn(struct turn *trn)
 		}
 		else
 			printf("Invalid input\n");
-		return 1;
+		return true;
 	}
 	else if(selection == 'r' && can_roll)
 	{
 		reroll_dice(trn);
-		print_dice(trn);
 		trn->just_rolled=true;
+		return true;
 	}
-	else if(selection == 'c')
+	else if(selection=='s')
 	{
-	print_dice(trn);
+		show_scores(trn->game);
+		pause();
 		return true;
 	}
 	else if(selection == '!' && DEBUG)
@@ -160,6 +174,7 @@ char execute_turn(struct turn *trn)
 	else if(selection == '@' && DEBUG)
 	{
 		configure_dice(trn);
+		return true;
 	}
 	else
 	{

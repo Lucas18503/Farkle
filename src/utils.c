@@ -10,6 +10,11 @@ void flush_buffer()
 {
 	while((getchar())!='\n');
 }
+void pause()
+{
+	printf("Press enter to continue.\n");
+flush_buffer();
+}
 int random_number(int lower, int upper)
 {
 	return (rand() % (upper-lower+1))+lower;
