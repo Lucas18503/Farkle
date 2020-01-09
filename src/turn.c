@@ -24,6 +24,12 @@ char action_can_roll_dice(struct turn *trn)
 		return false;
 		return true;
 }
+char action_can_bank(struct turn *trn)
+{
+	if((trn->player->score<=0 && trn->score<trn->game->bank_score) || trn->score<=0)
+		return false;
+	return true;
+}
 int run_configure_dice(struct turn *trn)
 {
 	printf("Dice:\n");
@@ -131,9 +137,13 @@ char execute_turn(struct turn *trn)
 		printf("%d: %s for %d points\n",i+1,combinations[i].name,combinations[i].points);
 	}
 	char can_roll=action_can_roll_dice(trn);
+	char can_bank=action_can_bank(trn);
+
 	if(can_roll)
 		printf("r: roll dice.\n");
 	printf("S: check all player scores\n");
+	if(can_bank)
+		printf("B: bank score and end turn\n");
 	if(DEBUG)
 	{
 		printf("Debug:\n");
@@ -168,6 +178,13 @@ char execute_turn(struct turn *trn)
 		show_scores(trn->game);
 		pause();
 		return true;
+	}
+	else if(selection=='b' && can_bank)
+	{
+		trn->player->score+=trn->score;
+		printf("%s banks %d points.\n",trn->player->name,trn->score);
+		pause();
+		return false;
 	}
 	else if(selection == '!' && DEBUG)
 		return false;

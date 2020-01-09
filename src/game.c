@@ -77,6 +77,8 @@ int run_configure_game(struct game *game)
 		if(game->num_players < MAX_PLAYERS)
 		{
 			sprintf(game->players[game->num_players].name,"Player %d", (game->num_players+1));
+			game->players[game->num_players].score=0;
+			game->players[game->num_players].winmark=0;
 			game->num_players++;
 		}
 		else
@@ -147,8 +149,12 @@ int main()
 	//create a game.
 	struct game game;
 	game.num_players=2;
-	strcpy(game.players[0].name, "Player 1");
-	strcpy(game.players[1].name, "Player 2");
+	for(int i=0; i<game.num_players; i++)
+	{
+		sprintf(game.players[i].name, "Player %d",(i+1));
+		game.players[i].score=0;
+		game.players[i].winmark=0;
+	}
 	game.winning_score=10000;
 	game.bank_score=500;
 	configure_game(&game);
