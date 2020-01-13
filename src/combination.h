@@ -16,7 +16,7 @@ int cb_multi(struct turn *trn, struct combination *cb);
 int check_for_similar_groups(struct turn *trn, struct combination *cb, int required_length, int required_num_groups);
 int cb_three_pair(struct turn *trn, struct combination *cb);
 int cb_two_triplets(struct turn *trn, struct combination *cb);
-
+int cb_straight(struct turn *trn, struct combination *cb);
 extern int (*roll_callbacks[])(struct turn*, struct combination*);
 extern int num_roll_callbacks;
 int check_roll(struct turn *trn, struct combination combinations[]);
