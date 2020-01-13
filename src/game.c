@@ -114,33 +114,30 @@ void configure_game(struct game *game)
 }
 void turn_loop(struct game *game)
 {
-	for(int i=0; i<game->num_players; i++)
+	struct turn trn;
+	trn.game=game;
+	trn.player=&game->players[game->current_player];
+	trn.score=0;
+	for(int i=0; i<DICE_SLOTS; i++)
+		trn.dice[i]=0;
+	trn.num_remaining_dice=0;
+	trn.just_rolled=false;
+	for(;;)
 	{
-		struct player *curr_player=&game->players[i];
-		printf("It is %s's turn.\n",curr_player->name);
-		struct turn trn;
-		trn.game=game;
-		trn.player=curr_player;
-		trn.score=0;
-		for(int i=0; i<DICE_SLOTS; i++)
-			trn.dice[i]=0;
-		trn.num_remaining_dice=0;
-		trn.just_rolled=false;
-		for(;;)
-		{
-			char cont=execute_turn(&trn);
-			if(!cont)
-				break;
-		}
-		
+		char cont=execute_turn(&trn);
+		if(!cont)
+			break;
 	}
 }
 void game_loop(struct game *game)
 {
-	for(int i=1;;i++)
+	for(;;)
 	{
-		printf("Turn %d\n",i);
-		turn_loop(game);
+		for(; game->current_player<game->num_players; game->current_player++)
+		{
+			turn_loop(game);
+		}
+		game->current_player=0;
 	}
 }
 int main()
@@ -155,6 +152,7 @@ int main()
 		game.players[i].score=0;
 		game.players[i].winmark=0;
 	}
+	game.current_player=0;
 	game.winning_score=10000;
 	game.bank_score=500;
 	configure_game(&game);

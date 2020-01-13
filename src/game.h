@@ -29,7 +29,7 @@ struct dice_group
 struct game
 {
 	struct player players[MAX_PLAYERS];
-	int num_players;
+	int num_players, current_player;
 	int winning_score;
 	int bank_score;
 	
