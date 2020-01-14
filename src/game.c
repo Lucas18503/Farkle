@@ -78,7 +78,6 @@ int run_configure_game(struct game *game)
 		{
 			sprintf(game->players[game->num_players].name,"Player %d", (game->num_players+1));
 			game->players[game->num_players].score=0;
-			game->players[game->num_players].winmark=0;
 			game->num_players++;
 		}
 		else
@@ -92,6 +91,34 @@ int run_configure_game(struct game *game)
 		}
 		else
 			printf("There can only be a minimum of 2 players in this game.\n");
+	}
+	else if(selection=='w')
+	{
+		printf("New winning score (more than 50):\n");
+		int ws;
+		scanf("%d",&ws);
+		if(ws<50)
+		{
+			printf("Invalid input.\n");
+			pause();
+			return true;
+		}
+		game->winning_score=ws;
+		return true;
+	}
+	else if(selection=='b')
+	{
+		printf("New minimum bank score (more than 50):\n");
+		int ws;
+		scanf("%d",&ws);
+		if(ws<50)
+		{
+			printf("Invalid input.\n");
+			pause();
+			return true;
+		}
+		game->bank_score=ws;
+		return true;
 	}
 	else if(selection == 'd')
 	{
@@ -135,7 +162,21 @@ void game_loop(struct game *game)
 	{
 		for(; game->current_player<game->num_players; game->current_player++)
 		{
+		if(game->current_player==game->winner)
+		{
+			printf("%s won the game.\n",game->players[game->winner].name);
+			printf("Final scores:\n");
+			show_scores(game);
+			pause();
+			return;
+		}
 			turn_loop(game);
+			if((game->winner<0&&game->players[game->current_player].score>=game->winning_score)||(game->players[game->current_player].score>game->players[game->winner].score))
+			{
+				game->winner=game->current_player;
+				printf("%s has reached the winning score. All other players will now have an opportunity to exceed this score.\n",game->players[game->winner].name);
+				pause();
+			}
 		}
 		game->current_player=0;
 	}
@@ -150,9 +191,9 @@ int main()
 	{
 		sprintf(game.players[i].name, "Player %d",(i+1));
 		game.players[i].score=0;
-		game.players[i].winmark=0;
 	}
 	game.current_player=0;
+	game.winner=-1;
 	game.winning_score=10000;
 	game.bank_score=500;
 	configure_game(&game);

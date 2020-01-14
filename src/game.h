@@ -17,7 +17,6 @@ struct player
 {
 	char name[100];
 	int score;
-	char winmark;
 };
 struct dice_group
 {
@@ -29,7 +28,8 @@ struct dice_group
 struct game
 {
 	struct player players[MAX_PLAYERS];
-	int num_players, current_player;
+	int num_players;
+	int current_player, winner;
 	int winning_score;
 	int bank_score;
 	
