@@ -9,6 +9,10 @@
 #include "game.h"
 #include "turn.h"
 
+/*
+Returns a group of dice that are the same value.
+*/
+
 struct dice_group find_dice_by_value(int value, struct turn *trn)
 {
 	struct dice_group ret;
@@ -24,6 +28,10 @@ struct dice_group find_dice_by_value(int value, struct turn *trn)
 	}
 	return ret;
 }
+/*
+Returns an array of length 6 (or DICE_SLOTS), containing all dice grouped.
+*/
+
 struct dice_group *group_all_dice(struct turn *trn)
 {
 	static struct dice_group ret[DICE_SLOTS];
@@ -37,6 +45,11 @@ int compare_scores(const void *p1, const void *p2) // These are typecast ot play
 {
 	return (((struct player *)p2)->score-((struct player *)p1)->score);
 }
+
+/*
+Prints the scores of all players.
+*/
+
 void show_scores(struct game *game)
 {
 	struct player players[game->num_players];
@@ -44,6 +57,11 @@ void show_scores(struct game *game)
 	qsort(players,game->num_players,sizeof(struct player),compare_scores);
 	for(int i=0; i<game->num_players; i++) printf("%s: %d points.\n",players[i].name,players[i].score);
 }
+
+/*
+Shows the game configuration screen. Does not loop.
+*/
+
 int run_configure_game(struct game *game)
 {
 	printf("Player names:\n");
@@ -130,6 +148,11 @@ int run_configure_game(struct game *game)
 		return true;
 	}
 }
+
+/*
+Runs the game configuration screen until it is closed from user input.
+*/
+
 void configure_game(struct game *game)
 {
 	for(;;)
@@ -139,6 +162,11 @@ void configure_game(struct game *game)
 			break;
 	}
 }
+
+/*
+Constructs a turn object and loops for input until the turn is finished.
+*/
+
 void turn_loop(struct game *game)
 {
 	struct turn trn;
@@ -156,6 +184,11 @@ void turn_loop(struct game *game)
 			break;
 	}
 }
+
+/*
+The main game loop. Handles winning and turn looping.
+*/
+
 void game_loop(struct game *game)
 {
 	for(;;)
@@ -181,6 +214,7 @@ void game_loop(struct game *game)
 		game->current_player=0;
 	}
 }
+
 int main()
 {
 	srand(time(0));

@@ -5,6 +5,11 @@
 #include "turn.h"
 #include "combination.h"
 #include "utils.h"
+
+/*
+Rerolls the remaining dice in the turn.
+*/
+
 void reroll_dice(struct turn *trn)
 {
 	if(trn->num_remaining_dice == 0)
@@ -14,22 +19,42 @@ void reroll_dice(struct turn *trn)
 		trn->dice[i]=roll_die();
 	}
 }
+
+/*
+Prints the list of dice values to the screen.
+*/
+
 void print_dice(struct turn *trn)
 {
 	print_dice_array(trn->dice,trn->num_remaining_dice);
 }
+
+/*
+Checks if the dice can be rolled from the turn interface.
+*/
+
 char action_can_roll_dice(struct turn *trn)
 {
 	if(trn->just_rolled)
 		return false;
 		return true;
 }
+
+/*
+Checks if points can be bankd from the turn interface.
+*/
+
 char action_can_bank(struct turn *trn)
 {
 	if((trn->player->score<=0 && trn->score<trn->game->bank_score) || trn->score<=0)
 		return false;
 	return true;
 }
+
+/*
+Runs a single iteration of the dice configuration tool for debugging.
+*/
+
 int run_configure_dice(struct turn *trn)
 {
 	printf("Dice:\n");
@@ -99,6 +124,11 @@ int run_configure_dice(struct turn *trn)
 		return true;
 	}
 }
+
+/*
+Continuously runs hte dice configuration tool.
+*/
+
 void configure_dice(struct turn *trn)
 {
 	for(;;)
@@ -108,6 +138,10 @@ void configure_dice(struct turn *trn)
 			break;
 	}
 }
+
+/*
+Runs a single iteration of the turn interface.
+*/
 
 char execute_turn(struct turn *trn)
 {

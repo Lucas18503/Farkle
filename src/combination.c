@@ -4,6 +4,12 @@
 #include "combination.h"
 #include "turn.h"
 #include "utils.h"
+
+/*
+Checks for the presence of a single die in a roll.
+The combination argument cb can be considered an out value, it will only be written to.
+*/
+
 int check_for_single(struct turn *trn, struct combination *cb, int value)
 {
 	int where=-1;
@@ -21,6 +27,12 @@ int check_for_single(struct turn *trn, struct combination *cb, int value)
 	cb->dice[0]=where;
 	return true;
 }
+
+/*
+Checks for a certain number of groupings (required_num_groups) of a certain length (required_length).
+Given roll of (3,4,3,4,3,4): check_for_similar_groups(trn, cb, 3, 2) => (3,3,3), (4,4,4)
+*/
+
 int check_for_similar_groups(struct turn *trn, struct combination *cb, int required_length, int required_num_groups)
 {
 	struct dice_group *groups = group_all_dice(trn);
@@ -109,6 +121,11 @@ return true;
 int (*roll_callbacks[])(struct turn*, struct combination*) = {&cb_straight,&cb_three_pair,&cb_two_triplets,&cb_multi,&cb_1,&cb_5};
 int num_roll_callbacks = 6;
 
+/*
+Returns an array of possible combinations for a certain roll.
+The combination argument combinations can be considered an out value, and an array.
+*/
+
 int check_roll(struct turn *trn, struct combination combinations[])
 {
 	int ret=0;
@@ -122,6 +139,11 @@ int check_roll(struct turn *trn, struct combination combinations[])
 	}
 	return ret;
 }
+
+/*
+Applies a combination to a turn. Applies dice changes and score changes.
+*/
+
 void apply_combination(struct turn *trn, struct combination *cb)
 {
 	for(int i=(cb->num_dice-1); i>=0; i--)
