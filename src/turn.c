@@ -51,6 +51,7 @@ char action_can_bank(struct turn *trn)
 	return true;
 }
 
+#ifdef DEBUG
 /*
 Runs a single iteration of the dice configuration tool for debugging.
 */
@@ -138,7 +139,7 @@ void configure_dice(struct turn *trn)
 			break;
 	}
 }
-
+#endif
 /*
 Runs a single iteration of the turn interface.
 */
@@ -178,12 +179,11 @@ char execute_turn(struct turn *trn)
 	printf("S: check all player scores\n");
 	if(can_bank)
 		printf("B: bank score and end turn\n");
-	if(DEBUG)
-	{
-		printf("Debug:\n");
-		printf("!: instant turn end.\n");
-		printf("@: Modify dice.\n");
-	}
+	#ifdef DEBUG
+	printf("Debug:\n");
+	printf("!: instant turn end.\n");
+	printf("@: Modify dice.\n");
+	#endif
 	//Check for input.
 	printf("Enter the letter or number of your selection.\n");
 	char selection;
@@ -220,13 +220,15 @@ char execute_turn(struct turn *trn)
 		pause();
 		return false;
 	}
-	else if(selection == '!' && DEBUG)
+	#ifdef DEBUG
+	else if(selection == '!')
 		return false;
-	else if(selection == '@' && DEBUG)
+	else if(selection == '@')
 	{
 		configure_dice(trn);
 		return true;
 	}
+	#endif
 	else
 	{
 		printf("Invalid input.\n");
