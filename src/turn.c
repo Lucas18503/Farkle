@@ -58,6 +58,8 @@ Runs a single iteration of the dice configuration tool for debugging.
 
 int run_configure_dice(struct turn *trn)
 {
+	system("cls");
+	printf("Dice roll configuration\n\n");
 	printf("Dice:\n");
 	for(int i=0; i<trn->num_remaining_dice; i++)
 	{
@@ -78,6 +80,7 @@ int run_configure_dice(struct turn *trn)
 		printf("Enter the new dice value.\n");
 		int value;
 		scanf("%i",&value);
+		flush_buffer();
 		if(value >= 1 && value <= 6)
 		{
 			trn->dice[(ind-1)]=value;
@@ -177,6 +180,7 @@ char execute_turn(struct turn *trn)
 	if(can_roll)
 		printf("r: roll dice.\n");
 	printf("S: check all player scores\n");
+	printf("V: Save game\n");
 	if(can_bank)
 		printf("B: bank score and end turn\n");
 	#ifdef DEBUG
@@ -212,6 +216,16 @@ char execute_turn(struct turn *trn)
 		show_scores(trn->game);
 		pause();
 		return true;
+	}
+	else if(selection == 'v')
+	{
+		char loc[128];
+		printf("What name would you like the save to have? If you use the same name for multiple saves, the first will be overwritten with no worning.\n");
+		scanf("%s",loc);
+		flush_buffer();
+		save_game(trn->game,loc);
+		printf("Success!\n");
+		pause();
 	}
 	else if(selection=='b' && can_bank)
 	{

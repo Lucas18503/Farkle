@@ -41,6 +41,7 @@ int compare_scores(const void *p1, const void *p2); // These are typecast to pla
 void show_scores(struct game *game);
 int run_configure_game(struct game *game);
 void configure_game(struct game *game);
+void save_game(struct game *game, char *loc);
 void turn_loop(struct game *game);
 void game_loop(struct game *game);
 void new_game();

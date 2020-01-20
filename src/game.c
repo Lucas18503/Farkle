@@ -64,6 +64,8 @@ Shows the game configuration screen. Does not loop.
 
 int run_configure_game(struct game *game)
 {
+	system("cls");
+	printf("Game configuration\n\n");
 	printf("Player names:\n");
 	for(int i=0; i<game->num_players; i++)
 	{
@@ -115,6 +117,7 @@ int run_configure_game(struct game *game)
 		printf("New winning score (more than 50):\n");
 		int ws;
 		scanf("%d",&ws);
+		flush_buffer();
 		if(ws<50)
 		{
 			printf("Invalid input.\n");
@@ -129,6 +132,7 @@ int run_configure_game(struct game *game)
 		printf("New minimum bank score (more than 50):\n");
 		int ws;
 		scanf("%d",&ws);
+		flush_buffer();
 		if(ws<50)
 		{
 			printf("Invalid input.\n");
@@ -163,6 +167,22 @@ void configure_game(struct game *game)
 	}
 }
 
+/*
+Writes a save to a file (name passed in string).
+*/
+
+void save_game(struct game *game, char *fname)
+{
+	char path[128]="\0";
+	strcat(path,"saves/\0");
+	strcat(path,fname);
+	strcat(path,".bin\0");
+	printf("%s\n",path);
+	FILE *hfile;
+	hfile = fopen(path,"wb");
+	fwrite(game,sizeof(*game),1,hfile);
+	fclose(hfile);
+}
 /*
 Constructs a turn object and loops for input until the turn is finished.
 */
@@ -244,6 +264,7 @@ int main()
 		printf("Choose an option.\n");
 		int selection;
 		scanf("%d",&selection);
+		flush_buffer();
 		if(selection == 0)
 		{
 			break;
