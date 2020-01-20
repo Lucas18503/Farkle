@@ -215,10 +215,8 @@ void game_loop(struct game *game)
 	}
 }
 
-int main()
+void new_game()
 {
-	srand(time(0));
-	//create a game.
 	struct game game;
 	game.num_players=2;
 	for(int i=0; i<game.num_players; i++)
@@ -232,6 +230,37 @@ int main()
 	game.bank_score=500;
 	configure_game(&game);
 	game_loop(&game);
-	
+}
+int main()
+{
+	srand(time(0));
+	for(;;)
+	{
+		system("cls");
+		printf("Farkle\nBy Lucas Brown\n\n");
+		printf("1: Start game\n");
+		printf("2: Load game\n");
+		printf("0: Exit\n");
+		printf("Choose an option.\n");
+		int selection;
+		scanf("%d",&selection);
+		if(selection == 0)
+		{
+			break;
+		}
+		else if(selection == 1)
+		{
+			new_game();
+		}
+		else if(selection == 2)
+		{
+			//load_game();
+		}
+		else
+		{
+			printf("Invalid selection.\n");
+			pause();
+		}
+	}
 	return 0;
 }

@@ -43,4 +43,5 @@ int run_configure_game(struct game *game);
 void configure_game(struct game *game);
 void turn_loop(struct game *game);
 void game_loop(struct game *game);
+void new_game();
 #endif
