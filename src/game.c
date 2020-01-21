@@ -177,12 +177,35 @@ void save_game(struct game *game, char *fname)
 	strcat(path,"saves/\0");
 	strcat(path,fname);
 	strcat(path,".bin\0");
-	printf("%s\n",path);
 	FILE *hfile;
+	printf("yay");
 	hfile = fopen(path,"wb");
 	fwrite(game,sizeof(*game),1,hfile);
 	fclose(hfile);
 }
+
+/*
+Reads a save from a file (name passed in string).
+This function is incredibly unsafe. Reading raw memory from a file like this has tons of potential for abuse, but I don't really have time to figure out good ways of making sure there are no buffer overflows etc.
+*/
+
+int load_game(struct game *game, char *fname)
+{
+	char path[128]="\0";
+	strcat(path,"saves/\0");
+	strcat(path,fname);
+	strcat(path,".bin\0");
+	FILE *hfile;
+	hfile = fopen(path,"rb");
+	if(hfile == NULL)
+	{
+		return false;
+	}
+	fread(game,sizeof(struct game),1,hfile);
+	fclose(hfile);
+	return true;
+}
+
 /*
 Constructs a turn object and loops for input until the turn is finished.
 */
@@ -275,7 +298,19 @@ int main()
 		}
 		else if(selection == 2)
 		{
-			//load_game();
+			char fname[128];
+			printf("Which save would you like to load?\n");
+			scanf("%s",fname);
+			flush_buffer();
+			struct game game;
+			int res=load_game(&game,fname);
+			if(!res)
+			{
+				printf("Save could not be loaded.\n");
+				pause();
+				continue;
+			}
+			game_loop(&game);
 		}
 		else
 		{

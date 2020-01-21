@@ -42,6 +42,7 @@ void show_scores(struct game *game);
 int run_configure_game(struct game *game);
 void configure_game(struct game *game);
 void save_game(struct game *game, char *loc);
+int load_game(struct game *game, char *fname);
 void turn_loop(struct game *game);
 void game_loop(struct game *game);
 void new_game();
