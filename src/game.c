@@ -247,7 +247,7 @@ void game_loop(struct game *game)
 			return;
 		}
 			turn_loop(game);
-			if((game->winner<0&&game->players[game->current_player].score>=game->winning_score)||(game->players[game->current_player].score>game->players[game->winner].score))
+			if((game->winner<0&&game->players[game->current_player].score>=game->winning_score)||(game->winner>=0&&game->players[game->current_player].score>game->players[game->winner].score))
 			{
 				game->winner=game->current_player;
 				printf("%s has reached the winning score. All other players will now have an opportunity to exceed this score.\n",game->players[game->winner].name);
@@ -303,6 +303,8 @@ int main()
 			scanf("%s",fname);
 			flush_buffer();
 			struct game game;
+			game.current_player=0;
+	game.winner=-1;
 			int res=load_game(&game,fname);
 			if(!res)
 			{

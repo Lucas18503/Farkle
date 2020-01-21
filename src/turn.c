@@ -187,6 +187,8 @@ char execute_turn(struct turn *trn)
 	printf("Debug:\n");
 	printf("!: instant turn end.\n");
 	printf("@: Modify dice.\n");
+	printf("#: Run game configuration.\n");
+
 	#endif
 	//Check for input.
 	printf("Enter the letter or number of your selection.\n");
@@ -242,6 +244,12 @@ char execute_turn(struct turn *trn)
 		configure_dice(trn);
 		return true;
 	}
+	else if(selection == '#')
+	{
+		configure_game(trn->game);
+		return true;
+	}
+
 	#endif
 	else
 	{
