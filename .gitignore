@@ -53,4 +53,4 @@ dkms.conf
 
 # Save files
 
-saves/*.bin
+/saves/*.bin
