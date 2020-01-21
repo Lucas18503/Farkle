@@ -3,6 +3,7 @@
 #include<ctype.h>
 #include<time.h>
 #include<string.h>
+#include<direct.h>
 #define BL_NUMWORDS_IMPLEMENTATION
 #include "bl_number_to_words.h"
 #include "utils.h"
@@ -173,12 +174,12 @@ Writes a save to a file (name passed in string).
 
 void save_game(struct game *game, char *fname)
 {
+	_mkdir("saves");
 	char path[128]="\0";
 	strcat(path,"saves/\0");
 	strcat(path,fname);
 	strcat(path,".bin\0");
 	FILE *hfile;
-	printf("yay");
 	hfile = fopen(path,"wb");
 	fwrite(game,sizeof(*game),1,hfile);
 	fclose(hfile);
