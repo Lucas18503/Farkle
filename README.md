@@ -1,7 +1,9 @@
 # Farkle
 Eleventh grade Comp-sci project.
-## Why?
-I like Farkle.
+## How to play
+There are many guides available online on how to play Farkle.
+Basically, you roll dice and then, depending on the vales you rolled, you can take differnet numbers of points in exchange for taking dice out of play. Three of a kind, a straight, etc.
+If you cannot make any combinations, that is known as a farkle and you lose all saved points. Otherwise, when you bank your score, that gets added to your point total.
 ## Terms
 * Combination: A group of dice that can be taken out of play for points. Examples are one, five, three ones, straight, etc.
 * Player: Someone in the game. The struct contains data like the player's name and score, and other misc stuff.
@@ -12,7 +14,5 @@ I like Farkle.
 ## Compilation
 ### Windows
 In your command line, run `run game'. Alternatively look at run.bat and compile it yourself.
-### MacOS/Linux/iOS/Android/Dos/Apple2/NES/Atari
+### Other platforms
 Good luck. Actually the game may run on some of these, but I do not own any of them and so cannot test.
-## Contact me
-Don't.
