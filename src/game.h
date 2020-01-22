@@ -1,7 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
 #define DICE_SLOTS 6
-#define DEBUG
 #define MAX_PLAYERS 8
 
 #define true 1
