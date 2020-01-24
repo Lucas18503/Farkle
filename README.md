@@ -2,7 +2,7 @@
 Eleventh grade Comp-sci project.
 ## How to play
 There are many guides available online on how to play Farkle.
-Basically, you roll dice and then, depending on the vales you rolled, you can take differnet numbers of points in exchange for taking dice out of play. Three of a kind, a straight, etc.
+Basically, you roll dice and then, depending on the values you rolled, you can take different numbers of points in exchange for taking dice out of play. Three of a kind, a straight, etc.
 If you cannot make any combinations, that is known as a farkle and you lose all saved points. Otherwise, when you bank your score, that gets added to your point total.
 ## Terms
 * Combination: A group of dice that can be taken out of play for points. Examples are one, five, three ones, straight, etc.
